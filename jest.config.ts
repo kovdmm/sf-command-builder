@@ -1,5 +1,6 @@
-/** @type {import('jest').Config} */
-export default {
+import { Config } from "@jest/types";
+
+const config: Config.InitialOptions = {
     testMatch: ["**/*.(test|spec).ts"],
     extensionsToTreatAsEsm: [".ts"],
     transform: {
@@ -11,5 +12,7 @@ export default {
             },
         ],
     },
-    collectCoverageFrom: ["**/*.ts", "!**/node_modules/**", "!**/coverage/**", "!**/__tests__/**", "!jest.config.js"],
+    collectCoverageFrom: ["**/*.ts", "!**/node_modules/**", "!**/coverage/**", "!**/__tests__/**", "!jest.config.ts"],
 };
+
+export default config;

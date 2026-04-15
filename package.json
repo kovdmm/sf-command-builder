@@ -1,7 +1,7 @@
 {
     "name": "sf-command-builder",
     "description": "A command builder for Salesforce CLI to use in CI pipelines",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": {
         "name": "Dmitry Kovalev",
         "email": "kov.dmm@gmail.com",
