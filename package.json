@@ -8,16 +8,30 @@
         "url": "https://github.com/kovdmm"
     },
     "license": "MIT",
-    "exports": "./dist/sf.js",
-    "main": "./dist/sf.js",
-    "types": "./dist/sf.d.ts",
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/kovdmm/sf-command-builder.git"
+    },
+    "keywords": [
+        "salesforce",
+        "sf",
+        "cli",
+        "ci"
+    ],
+    "exports": "./dist/index.js",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "type": "module",
     "scripts": {
         "build": "tsup",
         "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
         "test-watch": "npm run test -- --watch",
         "format": "prettier --write .",
-        "format-check": "prettier --check ."
+        "format-check": "prettier --check .",
+        "publish-check": "npm run format-check && npm run test && npm run build && npm pack --dry-run"
     },
     "devDependencies": {
         "@jest/globals": "^30.3.0",
