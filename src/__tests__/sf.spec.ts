@@ -1,4 +1,4 @@
-import { sf } from "../sf.js";
+import { sf } from "../sf";
 
 describe("sf command builder", () => {
     test("should build commands correctly", () => {

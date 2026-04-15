@@ -2,14 +2,13 @@ import process from "node:process";
 import { spawn as spawnChildProcess } from "node:child_process";
 import { Buffer } from "node:buffer";
 
-/**
- * 
- * @param {*} command 
- * @param {*} returnOutput 
- * @param {*} print 
- * @returns 
- */
-export const spawn = (command, returnOutput, print) => {
+export interface SpawnResult {
+    exitCode: number | null;
+    stdout?: string;
+    stderr?: string;
+}
+
+export const spawn = (command: string, returnOutput: boolean, print: boolean): Promise<SpawnResult> => {
     const childProcess = spawnChildProcess(command, { shell: true, stdio: "pipe" });
     if (print) {
         console.log("[PROGRESS] Spawned:", command);
@@ -21,15 +20,13 @@ export const spawn = (command, returnOutput, print) => {
         childProcess.on("error", reject);
 
         if (returnOutput) {
-            /** @type {Buffer[]} */
-            const stdoutChunks = [];
-            /** @type {Buffer[]} */
-            const stderrChunks = [];
+            const stdoutChunks: Buffer[] = [];
+            const stderrChunks: Buffer[] = [];
 
-            childProcess.stdout?.on("data", (chunk) => stdoutChunks.push(chunk));
-            childProcess.stderr?.on("data", (chunk) => stderrChunks.push(chunk));
+            childProcess.stdout?.on("data", (chunk: Buffer) => stdoutChunks.push(chunk));
+            childProcess.stderr?.on("data", (chunk: Buffer) => stderrChunks.push(chunk));
 
-            childProcess.on("close", (exitCode) => {
+            childProcess.on("close", (exitCode: number | null) => {
                 resolve({
                     exitCode,
                     stdout: Buffer.concat(stdoutChunks).toString(),
@@ -37,16 +34,12 @@ export const spawn = (command, returnOutput, print) => {
                 });
             });
         } else {
-            childProcess.on("close", (exitCode) => resolve({ exitCode }));
+            childProcess.on("close", (exitCode: number | null) => resolve({ exitCode }));
         }
     });
 };
 
-/**
- * 
- * @param {{ exitCode: number, stderr?: string, stdout?: string }} param0 
- */
-export const assertZeroCode = async ({ exitCode, stderr, stdout }) => {
+export const assertZeroCode = async ({ exitCode, stderr, stdout }: SpawnResult): Promise<void> => {
     if (exitCode !== 0) {
         const message = [stderr, stdout].filter(Boolean).join("\n");
         console.error("[ERROR] Command failed with message:", message);
@@ -55,26 +48,13 @@ export const assertZeroCode = async ({ exitCode, stderr, stdout }) => {
     }
 };
 
-/**
- * 
- * @param {*} command 
- * @param {*} returnOutput 
- * @param {*} print 
- * @returns 
- */
-export const exec = async (command, returnOutput = false, print = true) => {
+export const exec = async (command: string, returnOutput = false, print = true): Promise<SpawnResult> => {
     const result = await spawn(command, returnOutput, print);
     await assertZeroCode(result);
     return result;
 };
 
-/**
- * 
- * @param {*} command 
- * @param {*} print 
- * @returns 
- */
-export const execSfGetJson = async (command, print = false) => {
+export const execSfGetJson = async (command: string, print = false): Promise<SpawnResult> => {
     const result = await spawn(`${command} --json`, true, print);
-    return JSON.parse(result.stdout || '{ "exitCode": -1 }');
+    return JSON.parse(result.stdout || '{ "exitCode": -1 }') as SpawnResult;
 };

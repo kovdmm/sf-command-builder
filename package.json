@@ -2,20 +2,36 @@
     "name": "sf-command-builder",
     "description": "A command builder for Salesforce CLI to use in CI pipelines",
     "version": "1.0.0",
-    "author": "Dmitry Kovalev <kov.dmm@gmail.com>",
+    "author": {
+        "name": "Dmitry Kovalev",
+        "email": "kov.dmm@gmail.com",
+        "url": "https://github.com/kovdmm"
+    },
     "license": "MIT",
-    "exports": "./dist/.sf.js",
-    "main": "./index.js",
+    "exports": "./dist/sf.js",
+    "main": "./dist/sf.js",
+    "types": "./dist/sf.d.ts",
     "type": "module",
     "scripts": {
-        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.js",
+        "build": "tsup",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
         "test-watch": "npm run test -- --watch",
         "format": "prettier --write .",
         "format-check": "prettier --check ."
     },
     "devDependencies": {
         "@jest/globals": "^30.3.0",
+        "@types/jest": "^30.0.0",
+        "@types/node": "^25.6.0",
         "jest": "^30.3.0",
-        "prettier": "^3.8.2"
+        "prettier": "^3.8.2",
+        "ts-jest": "^29.4.9",
+        "ts-node": "^10.9.2",
+        "tsup": "^8.5.1",
+        "typescript": "^6.0.2"
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "printWidth": 120
     }
 }
